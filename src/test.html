@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .products_container {
+        display: flex;
+        gap: 12px;
+      }
+      .card {
+        border: 1px solid black;
+        border-radius: 1rem;
+        width: 13rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .card_img {
+        width: 10rem;
+        height: 10rem;
+        border-radius: 1rem;
+        margin-top: 0.5rem;
+      }
+      .card_content {
+        width: 70%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Products :</h1>
+    <hr />
+    <div class="products_container"></div>
+    <script>
+      async function getProducts() {
+        let response = await fetch('http://localhost:3000/products');
+        let datas = await response.json();
+        return datas;
+      }
+      async function main() {
+        let datas = await getProducts();
+        let container = document.querySelector('.products_container');
+        datas.forEach((product) => {
+          let card = document.createElement('div');
+          card.classList.add('card');
+          card.innerHTML = `
+            <img class="card_img" src="${product.image}"/>
+            <div class="card_content">
+                <h3 class="card_title">${product.name.slice(0, 30)}</h3>
+                <p class="card_desc">${product.description.slice(0, 60)}  ${
+            product.description.length > 60 ? '...' : ''
+          }</p>
+                <p class="card_price">${product.price}€</p>
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+      }
+
+      main();
+
+      // fetch('http://localhost:3000/products')
+      //   .then((response) => response.json())
+      //   .then((datas) => {
+      //     let container = document.querySelector('.products_container');
+      //     datas.forEach((product) => {
+      //       let card = document.createElement('div');
+      //       card.classList.add('card');
+      //       card.innerHTML = `
+      //       <img class="card_img" src="${product.image}"/>
+      //       <div class="card_content">
+      //           <h3 class="card_title">${product.name.slice(0, 30)}</h3>
+      //           <p class="card_desc">${product.description.slice(0, 60)}  ${
+      //         product.description.length > 60 ? '...' : ''
+      //       }</p>
+      //           <p class="card_price">${product.price}€</p>
+      //       </div>
+      //     `;
+
+      //       container.appendChild(card);
+      //     });
+      //   });
+    </script>
+  </body>
+</html>
