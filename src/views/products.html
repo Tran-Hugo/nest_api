@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/products.css" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100">
+    <header></header>
+    <h2 id="products_title" class="text-xl w-10/12 m-auto">All figures :</h2>
+    <div class="products_container w-10/12 m-auto h-screen p-2 pt-4"></div>
+    <script type="module">
+      import { getHeader, main } from './js/products.js';
+
+      getHeader();
+      main();
+    </script>
+  </body>
+</html>

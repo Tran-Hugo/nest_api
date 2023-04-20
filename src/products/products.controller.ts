@@ -6,9 +6,11 @@ import {
   Put,
   Delete,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ProductEntity } from './product.entity/product.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('products')
 export class ProductsController {
@@ -22,6 +24,11 @@ export class ProductsController {
   @Get(':id')
   get(@Param() params) {
     return this.service.getProduct(params.id);
+  }
+
+  @Get('category/:id')
+  getByCategory(@Param() params) {
+    return this.service.getProductsByCategory(params.id);
   }
 
   @Post()

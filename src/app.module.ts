@@ -4,6 +4,9 @@ import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeusersModule } from './typeusers/typeusers.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -19,6 +22,9 @@ import { TypeusersModule } from './typeusers/typeusers.module';
     }),
     ProductsModule,
     TypeusersModule,
+    UsersModule,
+    AuthModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

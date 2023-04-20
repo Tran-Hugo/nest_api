@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #7bfb7b;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+        padding: 1rem;
+        background-color: white;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+      }
+      .hidden {
+        display: none !important;
+      }
+      input {
+        width: 200px;
+        height: 30px;
+        border: none;
+        border-bottom: 1px solid #7bfb7b;
+        padding: 0 0.5rem;
+      }
+      .error {
+        width: 100%;
+        text-align: center;
+        color: red;
+      }
+
+      .success {
+        width: 100%;
+        text-align: center;
+        color: green;
+      }
+
+      button {
+        width: 100%;
+        height: 30px;
+        border-radius: 0.5rem;
+        border: none;
+        background-color: #7bfb7b;
+        color: white;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="auth_form">
+      <input id="username" type="text" placeholder="username" />
+      <input id="password" type="password" placeholder="password" />
+      <button>Submit</button>
+      <a href="#">create an account</a>
+    </form>
+    <form id="subscribe_form" class="hidden">
+      <input id="sub_firstname" type="text" placeholder="firstname" />
+      <input id="sub_lastname" type="text" placeholder="lastname" />
+      <input id="sub_email" type="text" placeholder="email" />
+      <input id="sub_password" type="password" placeholder="password" />
+      <input
+        id="sub_conf_password"
+        type="password"
+        placeholder="confirm password"
+      />
+      <input id="phone" type="text" placeholder="phone" />
+      <button>Subscribe</button>
+    </form>
+    <script type="module">
+      const form = document.querySelector('#auth_form');
+      const subscribe_btn = document.querySelector('#auth_form a');
+      const subscribe_form = document.querySelector('#subscribe_form');
+      subscribe_btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        form.classList.add('hidden');
+        subscribe_form.classList.remove('hidden');
+      });
+
+      function subscribe() {
+        let firstname = document.getElementById('sub_firstname').value;
+        let lastname = document.getElementById('sub_lastname').value;
+        let email = document.getElementById('sub_email').value;
+        let username = document.getElementById('sub_firstname').value;
+        let password = document.getElementById('sub_password').value;
+        let conf_password = document.getElementById('sub_conf_password').value;
+        let phone = document.getElementById('phone').value;
+
+        if (password !== conf_password) {
+          return alert('passwords do not match');
+        } else {
+          let data = {
+            firstname,
+            lastname,
+            email,
+            username,
+            password,
+            phone,
+            type: 3,
+          };
+          fetch('http://localhost:3000/users', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          })
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error('HTTP error, status = ' + res.status);
+              }
+              return res.json();
+            })
+            .then((data) => {
+              console.log(data);
+              let success_msg = document.createElement('p');
+              success_msg.classList.add('success');
+              success_msg.innerText = 'Success';
+              form.appendChild(success_msg);
+              setTimeout(() => {
+                success_msg.remove();
+              }, 2000);
+            })
+            .catch((err) => {
+              console.log(err);
+              let error_msg = document.createElement('p');
+              error_msg.classList.add('error');
+              error_msg.innerText = 'Error';
+              form.appendChild(error_msg);
+              setTimeout(() => {
+                error_msg.remove();
+              }, 2000);
+            });
+        }
+      }
+
+      function login() {
+        let username = document.getElementById('username').value;
+        let password = document.getElementById('password').value;
+        let data = {
+          username,
+          password,
+        };
+        fetch('http://localhost:3000/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error('HTTP error, status = ' + res.status);
+            }
+            return res.json();
+          })
+          .then((data) => {
+            let success_msg = document.createElement('p');
+            success_msg.classList.add('success');
+            success_msg.innerText = 'Success';
+            form.appendChild(success_msg);
+            setTimeout(() => {
+              success_msg.remove();
+            }, 2000);
+            localStorage.setItem('token', data.access_token);
+            localStorage.setItem('refresh_token', data.refresh_token);
+            window.open('products.html', '_self');
+          })
+          .catch((err) => {
+            let error_msg = document.createElement('p');
+            error_msg.classList.add('error');
+            error_msg.innerText = 'Error';
+            form.appendChild(error_msg);
+            setTimeout(() => {
+              error_msg.remove();
+            }, 2000);
+          });
+      }
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        login();
+      });
+      subscribe_form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        subscribe();
+      });
+    </script>
+  </body>
+</html>
